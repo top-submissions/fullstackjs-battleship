@@ -1,0 +1,57 @@
+{
+  "name": "template-webpack",
+  "version": "1.0.0",
+  "description": "A production-ready Webpack 5 template with ESLint and Prettier",
+  "main": "src/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "install:dev": "npm install @eslint/js css-loader eslint globals html-loader jest html-webpack-plugin prettier style-loader webpack webpack-cli webpack-dev-server",
+    "build": "webpack --config config/webpack.prod.js",
+    "build:dev": "webpack --config config/webpack.dev.js",
+    "dev": "webpack serve --config config/webpack.dev.js",
+    "watch": "webpack --watch --config config/webpack.dev.js",
+    "deploy": "npm run build && git checkout -B gh-pages && git merge main --no-edit && git add dist -f && git commit -m \"build: deployment commit\" && git subtree push --prefix dist origin gh-pages && git checkout main",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "format": "prettier --write \"src/**/*.{js,css,html}\"",
+    "format:check": "prettier --check \"src/**/*.{js,css,html}\"",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/top-submissions/template-webpack.git"
+  },
+  "keywords": [
+    "webpack",
+    "template",
+    "boilerplate",
+    "webpack5",
+    "eslint",
+    "prettier"
+  ],
+  "author": "top-submissions",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/top-submissions/template-webpack/issues"
+  },
+  "homepage": "https://github.com/top-submissions/template-webpack#readme",
+  "devDependencies": {
+    "@eslint/js": "^9.39.2",
+    "css-loader": "^7.1.2",
+    "eslint": "^9.39.2",
+    "globals": "^16.5.0",
+    "html-loader": "^5.1.0",
+    "html-webpack-plugin": "^5.6.5",
+    "jest": "^30.2.0",
+    "prettier": "3.7.4",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "dependencies": {
+    "date-fns": "^4.1.0"
+  }
+}
