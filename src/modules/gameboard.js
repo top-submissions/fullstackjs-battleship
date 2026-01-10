@@ -10,6 +10,11 @@ function createGameboard() {
           const key = `${row},${col + i}`;
           board[key] = ship;
         }
+      } else if (orientation === 'vertical') {
+        for (let i = 0; i < ship.length; i++) {
+          const key = `${row + i},${col}`;
+          board[key] = ship;
+        }
       }
     },
 
