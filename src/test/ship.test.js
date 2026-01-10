@@ -1,5 +1,10 @@
-describe('Jest setup', () => {
-  test('Jest is working', () => {
-    expect(true).toBe(true);
+import { createShip } from '../modules/ship.js';
+
+describe('ship module', () => {
+  describe('ship factory', () => {
+    test('creates a ship with specified length', () => {
+      const ship = createShip(3);
+      expect(ship.length).toBe(3);
+    });
   });
 });
