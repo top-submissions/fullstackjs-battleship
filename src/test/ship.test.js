@@ -11,5 +11,11 @@ describe('ship module', () => {
       const ship = createShip(4);
       expect(ship.hits).toBe(0);
     });
+
+    test('hit() method increases hit count by 1', () => {
+      const ship = createShip(3);
+      ship.hit();
+      expect(ship.hits).toBe(1);
+    });
   });
 });
