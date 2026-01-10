@@ -24,5 +24,15 @@ describe('gameboard module', () => {
       expect(gameboard.getShipAt([1, 0])).toBe(ship);
       expect(gameboard.getShipAt([2, 0])).toBe(ship);
     });
+
+    test('receiveAttack() hits a ship and calls ship hit() method', () => {
+      const gameboard = createGameboard();
+      const ship = createShip(3);
+
+      gameboard.placeShip(ship, [0, 0], 'horizontal');
+      gameboard.receiveAttack([0, 1]);
+
+      expect(ship.hits).toBe(1);
+    });
   });
 });

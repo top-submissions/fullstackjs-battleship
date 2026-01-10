@@ -23,6 +23,16 @@ function createGameboard() {
       const key = `${row},${col}`;
       return board[key] || null;
     },
+
+    receiveAttack(coordinates) {
+      const [row, col] = coordinates;
+      const key = `${row},${col}`;
+      const ship = board[key];
+
+      if (ship) {
+        ship.hit();
+      }
+    },
   };
 }
 
