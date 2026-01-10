@@ -6,5 +6,10 @@ describe('ship module', () => {
       const ship = createShip(3);
       expect(ship.length).toBe(3);
     });
+
+    test('initializes with zero hits', () => {
+      const ship = createShip(4);
+      expect(ship.hits).toBe(0);
+    });
   });
 });
