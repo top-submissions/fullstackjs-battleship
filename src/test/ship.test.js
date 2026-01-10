@@ -18,10 +18,20 @@ describe('ship module', () => {
       expect(ship.hits).toBe(1);
     });
 
-    test('isSunk() returns false when hits are less than length', () => {
-      const ship = createShip(3);
-      ship.hit();
-      expect(ship.isSunk()).toBe(false);
+    describe('isSunk method', () => {
+      test('isSunk() returns false when hits are less than length', () => {
+        const ship = createShip(3);
+        ship.hit();
+        expect(ship.isSunk()).toBe(false);
+      });
+
+      test('isSunk() returns true when hits equals length', () => {
+        const ship = createShip(3);
+        ship.hit();
+        ship.hit();
+        ship.hit();
+        expect(ship.isSunk()).toBe(true);
+      });
     });
   });
 });
