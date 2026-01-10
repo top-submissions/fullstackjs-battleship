@@ -17,5 +17,11 @@ describe('ship module', () => {
       ship.hit();
       expect(ship.hits).toBe(1);
     });
+
+    test('isSunk() returns false when hits are less than length', () => {
+      const ship = createShip(3);
+      ship.hit();
+      expect(ship.isSunk()).toBe(false);
+    });
   });
 });
