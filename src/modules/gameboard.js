@@ -1,10 +1,13 @@
 function createGameboard() {
   const board = {};
   const missedAttacks = [];
+  const ships = [];
 
   return {
     placeShip(ship, coordinates, orientation) {
       const [row, col] = coordinates;
+
+      ships.push(ship);
 
       if (orientation === 'horizontal') {
         for (let i = 0; i < ship.length; i++) {
@@ -39,6 +42,10 @@ function createGameboard() {
 
     getMissedAttacks() {
       return missedAttacks;
+    },
+
+    allShipsSunk() {
+      return ships.every(ship => ship.isSunk());
     },
   };
 }
