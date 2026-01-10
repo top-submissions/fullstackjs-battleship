@@ -1,5 +1,6 @@
 function createGameboard() {
   const board = {};
+  const missedAttacks = [];
 
   return {
     placeShip(ship, coordinates, orientation) {
@@ -31,7 +32,13 @@ function createGameboard() {
 
       if (ship) {
         ship.hit();
+      } else {
+        missedAttacks.push(coordinates);
       }
+    },
+
+    getMissedAttacks() {
+      return missedAttacks;
     },
   };
 }

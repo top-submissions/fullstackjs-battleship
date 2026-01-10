@@ -34,5 +34,17 @@ describe('gameboard module', () => {
 
       expect(ship.hits).toBe(1);
     });
+
+    test('receiveAttack() records missed attacks', () => {
+      const gameboard = createGameboard();
+
+      gameboard.receiveAttack([5, 5]);
+      gameboard.receiveAttack([7, 3]);
+
+      const missedAttacks = gameboard.getMissedAttacks();
+      expect(missedAttacks).toContainEqual([5, 5]);
+      expect(missedAttacks).toContainEqual([7, 3]);
+      expect(missedAttacks.length).toBe(2);
+    });
   });
 });
