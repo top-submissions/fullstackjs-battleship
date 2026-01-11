@@ -6,6 +6,9 @@ function createPlayer(name) {
   return {
     name: name,
     gameboard: gameboard,
+    attack(enemyGameboard, coordinates) {
+      enemyGameboard.receiveAttack(coordinates);
+    },
   };
 }
 
