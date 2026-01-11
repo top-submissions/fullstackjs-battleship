@@ -17,5 +17,17 @@ describe('game module', () => {
 
       expect(game.getCurrentPlayer()).toBe(game.player1);
     });
+
+    test('game switches turns between players', () => {
+      const game = createGame();
+
+      expect(game.getCurrentPlayer()).toBe(game.player1);
+
+      game.switchTurn();
+      expect(game.getCurrentPlayer()).toBe(game.player2);
+
+      game.switchTurn();
+      expect(game.getCurrentPlayer()).toBe(game.player1);
+    });
   });
 });
