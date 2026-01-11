@@ -1,9 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Battleship Game</title>
   </head>
-  <body></body>
+  <body>
+    <div id="app">
+      <header>
+        <h1>Battleship</h1>
+        <div id="game-info">
+          <p id="current-player">Player 1's Turn</p>
+          <p id="game-status">Place your ships to start</p>
+        </div>
+      </header>
+
+      <main>
+        <section id="setup-phase" class="phase active">
+          <h2>Setup Phase</h2>
+          <div id="ship-placement-controls">
+            <button id="start-game-btn">Start Game</button>
+          </div>
+        </section>
+
+        <section id="game-phase" class="phase hidden">
+          <div class="gameboards-container">
+            <div class="gameboard-wrapper">
+              <h3>Your Board</h3>
+              <div id="player-board" class="gameboard"></div>
+            </div>
+
+            <div class="gameboard-wrapper">
+              <h3>Enemy Board</h3>
+              <div id="enemy-board" class="gameboard"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="game-over-phase" class="phase hidden">
+          <h2>Game Over!</h2>
+          <p id="winner-message"></p>
+          <button id="restart-btn">Play Again</button>
+        </section>
+      </main>
+    </div>
+  </body>
 </html>
