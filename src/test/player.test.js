@@ -22,5 +22,19 @@ describe('player module', () => {
 
       expect(ship.hits).toBe(1);
     });
+
+    test('computer player makes random attacks on valid coordinates', () => {
+      const computer = createPlayer('Computer', true);
+      const enemy = createPlayer('Player 1');
+
+      const attack1 = computer.randomAttack(enemy.gameboard);
+      const attack2 = computer.randomAttack(enemy.gameboard);
+
+      expect(attack1).toBeDefined();
+      expect(Array.isArray(attack1)).toBe(true);
+      expect(attack1.length).toBe(2);
+      expect(attack2).toBeDefined();
+      expect(attack1).not.toEqual(attack2);
+    });
   });
 });
