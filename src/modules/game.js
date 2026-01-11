@@ -14,6 +14,19 @@ function createGame() {
     switchTurn() {
       currentPlayer = currentPlayer === player1 ? player2 : player1;
     },
+    isGameOver() {
+      return (
+        player1.gameboard.allShipsSunk() || player2.gameboard.allShipsSunk()
+      );
+    },
+    getWinner() {
+      if (player1.gameboard.allShipsSunk()) {
+        return player2;
+      } else if (player2.gameboard.allShipsSunk()) {
+        return player1;
+      }
+      return null;
+    },
   };
 }
 
