@@ -11,5 +11,11 @@ describe('game module', () => {
       expect(game.player2.gameboard).toBeDefined();
       expect(game.player2.isComputer).toBe(true);
     });
+
+    test('game tracks current turn and starts with player1', () => {
+      const game = createGame();
+
+      expect(game.getCurrentPlayer()).toBe(game.player1);
+    });
   });
 });
