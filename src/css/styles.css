@@ -54,6 +54,53 @@ h1 {
   padding: 40px;
 }
 
+.setup-container {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+#ship-placement-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-width: 250px;
+}
+
+#ship-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ship-btn {
+  background-color: #0f3460;
+  color: white;
+  border: 2px solid transparent;
+  padding: 12px 24px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.ship-btn:hover {
+  background-color: #16213e;
+}
+
+.ship-btn.active {
+  border-color: #4ecca3;
+  background-color: #16213e;
+}
+
+.ship-btn.placed {
+  background-color: #2d3748;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 button {
   background-color: #0f3460;
   color: white;
@@ -65,8 +112,24 @@ button {
   transition: background-color 0.3s ease;
 }
 
-button:hover {
+button:hover:not(:disabled) {
   background-color: #16213e;
+}
+
+button:disabled {
+  background-color: #2d3748;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+#toggle-orientation {
+  background-color: #4ecca3;
+  color: #1a1a2e;
+  font-weight: bold;
+}
+
+#toggle-orientation:hover {
+  background-color: #3dbb8f;
 }
 
 .gameboards-container {
@@ -118,6 +181,14 @@ button:hover {
 
 .cell.miss {
   background-color: #3498db;
+}
+
+.cell.preview {
+  background-color: #4ecca3;
+}
+
+.cell.preview-invalid {
+  background-color: #e74c3c;
 }
 
 #game-over-phase {
