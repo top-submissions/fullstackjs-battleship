@@ -11,6 +11,9 @@ function createGame() {
     getCurrentPlayer() {
       return currentPlayer;
     },
+    switchTurn() {
+      currentPlayer = currentPlayer === player1 ? player2 : player1;
+    },
   };
 }
 
