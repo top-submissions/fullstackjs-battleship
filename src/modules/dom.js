@@ -1,3 +1,4 @@
+import { container } from 'webpack';
 import { createGame } from './game.js';
 
 function createDOMController() {
@@ -11,4 +12,19 @@ function createDOMController() {
     { name: 'Submarine', length: 3, placed: false },
     { name: 'Destroyer', length: 2, placed: false },
   ];
+
+  function renderGameboard(gameboard, containerElement, isEnemyBoard = false) {
+    containerElement.innerHTML = '';
+
+    for (let row = 0; row < 10; row++) {
+      for (let col = 0; col < 10; col++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.row = row;
+        cell.dataset.col = col;
+
+        containerElement.appendChild(cell);
+      }
+    }
+  }
 }
