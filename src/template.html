@@ -26,24 +26,48 @@
             </div>
             <div id="ship-placement-controls">
               <h3>Place Your Ships</h3>
+              <p class="instruction">
+                Drag ships onto the board or click to select and place
+              </p>
               <div id="ship-list">
                 <button
                   class="ship-btn active"
                   data-length="5"
                   data-name="Carrier"
+                  draggable="true"
                 >
                   Carrier (5)
                 </button>
-                <button class="ship-btn" data-length="4" data-name="Battleship">
+                <button
+                  class="ship-btn"
+                  data-length="4"
+                  data-name="Battleship"
+                  draggable="true"
+                >
                   Battleship (4)
                 </button>
-                <button class="ship-btn" data-length="3" data-name="Cruiser">
+                <button
+                  class="ship-btn"
+                  data-length="3"
+                  data-name="Cruiser"
+                  draggable="true"
+                >
                   Cruiser (3)
                 </button>
-                <button class="ship-btn" data-length="3" data-name="Submarine">
+                <button
+                  class="ship-btn"
+                  data-length="3"
+                  data-name="Submarine"
+                  draggable="true"
+                >
                   Submarine (3)
                 </button>
-                <button class="ship-btn" data-length="2" data-name="Destroyer">
+                <button
+                  class="ship-btn"
+                  data-length="2"
+                  data-name="Destroyer"
+                  draggable="true"
+                >
                   Destroyer (2)
                 </button>
               </div>

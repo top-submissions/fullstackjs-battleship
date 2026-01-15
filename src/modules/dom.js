@@ -9,6 +9,7 @@ function createDOMController() {
   let selectedShipIndex = 0;
   let isPlayerTurn = true;
   let waitingForConfirmation = false;
+  let draggedShipIndex = null;
   const ships = [
     { name: 'Carrier', length: 5, placed: false },
     { name: 'Battleship', length: 4, placed: false },
@@ -271,7 +272,7 @@ function createDOMController() {
     const result = game.player1.attack(game.player2.gameboard, [row, col]);
 
     if (result === 'hit') {
-      sounds.playHit(); // Add this line
+      sounds.playHit();
       document.getElementById('game-status').textContent =
         'Direct hit! You damaged an enemy ship. Fire again!';
       cell.classList.add('hit');
@@ -380,6 +381,90 @@ function createDOMController() {
       `${winner.name} wins!`;
   }
 
+  function handleDragStart(e, index) {
+    if (ships[index].placed) {
+      e.preventDefault();
+      return;
+    }
+    draggedShipIndex = index;
+    e.target.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  }
+
+  function handleDragEnd(e) {
+    e.target.classList.remove('dragging');
+    draggedShipIndex = null;
+
+    // Clear all drag-over classes
+    const board = document.getElementById('player-board-setup');
+    const cells = board.querySelectorAll('.cell');
+    cells.forEach(cell => {
+      cell.classList.remove('drag-over', 'drag-invalid');
+    });
+  }
+
+  function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+
+    if (draggedShipIndex === null || ships[draggedShipIndex].placed) return;
+
+    const cell = e.target;
+    if (!cell.classList.contains('cell')) return;
+
+    const row = parseInt(cell.dataset.row);
+    const col = parseInt(cell.dataset.col);
+    const shipLength = ships[draggedShipIndex].length;
+
+    // Clear previous highlights
+    const board = document.getElementById('player-board-setup');
+    const cells = board.querySelectorAll('.cell');
+    cells.forEach(c => {
+      c.classList.remove('drag-over', 'drag-invalid');
+    });
+
+    // Check if can place
+    const canPlace = canPlaceShip(row, col, shipLength, currentOrientation);
+
+    // Highlight cells
+    for (let i = 0; i < shipLength; i++) {
+      const targetRow = currentOrientation === 'horizontal' ? row : row + i;
+      const targetCol = currentOrientation === 'horizontal' ? col + i : col;
+
+      if (targetRow < 10 && targetCol < 10) {
+        const targetCell = board.querySelector(
+          `[data-row="${targetRow}"][data-col="${targetCol}"]`
+        );
+        if (targetCell) {
+          targetCell.classList.add(canPlace ? 'drag-over' : 'drag-invalid');
+        }
+      }
+    }
+  }
+
+  function handleDrop(e) {
+    e.preventDefault();
+
+    if (draggedShipIndex === null || ships[draggedShipIndex].placed) return;
+
+    const cell = e.target;
+    if (!cell.classList.contains('cell')) return;
+
+    const row = parseInt(cell.dataset.row);
+    const col = parseInt(cell.dataset.col);
+
+    // Use existing placeShip function
+    selectedShipIndex = draggedShipIndex;
+    placeShip(row, col);
+
+    // Clear drag highlights
+    const board = document.getElementById('player-board-setup');
+    const cells = board.querySelectorAll('.cell');
+    cells.forEach(c => {
+      c.classList.remove('drag-over', 'drag-invalid');
+    });
+  }
+
   function setupGamePhaseListeners() {
     const enemyBoard = document.getElementById('enemy-board');
 
@@ -426,7 +511,11 @@ function createDOMController() {
       }
     });
 
-    // Orientation toggle
+    // Add drag and drop event listeners for board
+    board.addEventListener('dragover', handleDragOver);
+    board.addEventListener('drop', handleDrop);
+
+    // Orientation toggle (existing code)
     document
       .getElementById('toggle-orientation')
       .addEventListener('click', () => {
@@ -437,9 +526,10 @@ function createDOMController() {
           currentOrientation.slice(1);
       });
 
-    // Ship selection
+    // Ship selection and drag handlers
     const shipBtns = document.querySelectorAll('.ship-btn');
     shipBtns.forEach((btn, index) => {
+      // Existing click handler
       btn.addEventListener('click', () => {
         if (!ships[index].placed) {
           shipBtns.forEach(b => b.classList.remove('active'));
@@ -447,6 +537,10 @@ function createDOMController() {
           selectedShipIndex = index;
         }
       });
+
+      // Add drag handlers
+      btn.addEventListener('dragstart', e => handleDragStart(e, index));
+      btn.addEventListener('dragend', handleDragEnd);
     });
 
     // Start game button
@@ -497,14 +591,14 @@ function createDOMController() {
         document.getElementById('confirm-turn-btn').classList.add('hidden');
       });
 
-    // End game button (add this)
+    // End game button
     document.getElementById('end-game-btn').addEventListener('click', () => {
       if (confirm('Are you sure you want to end the current game?')) {
         location.reload();
       }
     });
 
-    // Mute button (add this)
+    // Mute button
     document.getElementById('mute-btn').addEventListener('click', () => {
       const muted = sounds.toggleMute();
       const muteBtn = document.getElementById('mute-btn');
