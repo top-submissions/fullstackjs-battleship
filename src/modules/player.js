@@ -9,7 +9,7 @@ function createPlayer(name, isComputer = false) {
     isComputer: isComputer,
     gameboard: gameboard,
     attack(enemyGameboard, coordinates) {
-      enemyGameboard.receiveAttack(coordinates);
+      return enemyGameboard.receiveAttack(coordinates);
     },
     randomAttack(enemyGameboard) {
       let coordinates;

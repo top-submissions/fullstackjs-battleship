@@ -197,6 +197,7 @@ function createDOMController() {
       const isMiss = missedAttacks.some(
         attack => attack[0] === row && attack[1] === col
       );
+      const isHit = game.player1.gameboard.isCellHit([row, col]);
 
       cell.classList.remove('ship', 'hit', 'miss');
 
@@ -204,7 +205,9 @@ function createDOMController() {
         cell.classList.add('ship');
       }
 
-      if (isMiss) {
+      if (isHit) {
+        cell.classList.add('hit');
+      } else if (isMiss) {
         cell.classList.add('miss');
       }
     });
@@ -220,9 +223,14 @@ function createDOMController() {
       const isMiss = missedAttacks.some(
         attack => attack[0] === row && attack[1] === col
       );
+      const isHit = game.player2.gameboard.isCellHit([row, col]);
 
-      // Don't show enemy ships, only hits and misses already marked
-      if (isMiss && !cell.classList.contains('miss')) {
+      cell.classList.remove('hit', 'miss');
+
+      // Don't show enemy ships, only hits and misses
+      if (isHit) {
+        cell.classList.add('hit');
+      } else if (isMiss) {
         cell.classList.add('miss');
       }
     });
@@ -246,38 +254,48 @@ function createDOMController() {
       return;
     }
 
-    // Perform attack
-    game.player1.attack(game.player2.gameboard, [row, col]);
+    // Perform attack and get result
+    const result = game.player1.attack(game.player2.gameboard, [row, col]);
 
-    // Check if hit or miss
-    const ship = game.player2.gameboard.getShipAt([row, col]);
-    if (ship) {
-      document.getElementById('game-status').textContent = 'Hit!';
+    if (result === 'hit') {
+      document.getElementById('game-status').textContent = 'Hit! Go again!';
       cell.classList.add('hit');
+
+      // Update boards
+      updateGameBoards();
+
+      // Check for game over
+      if (game.isGameOver()) {
+        endGame();
+        return;
+      }
+
+      // Player gets another turn on hit
+      // Stay on player's turn
     } else {
       document.getElementById('game-status').textContent = 'Miss!';
       cell.classList.add('miss');
+
+      // Update boards
+      updateGameBoards();
+
+      // Check for game over
+      if (game.isGameOver()) {
+        endGame();
+        return;
+      }
+
+      // Switch to computer's turn on miss
+      isPlayerTurn = false;
+      document.getElementById('current-player').textContent = "Computer's Turn";
+      document.getElementById('game-status').textContent =
+        'Computer is thinking...';
+
+      // Computer attacks after delay
+      setTimeout(() => {
+        handleComputerAttack();
+      }, 1000);
     }
-
-    // Update boards
-    updateGameBoards();
-
-    // Check for game over
-    if (game.isGameOver()) {
-      endGame();
-      return;
-    }
-
-    // Switch to computer's turn
-    isPlayerTurn = false;
-    document.getElementById('current-player').textContent = "Computer's Turn";
-    document.getElementById('game-status').textContent =
-      'Computer is thinking...';
-
-    // Computer attacks after delay
-    setTimeout(() => {
-      handleComputerAttack();
-    }, 1000);
   }
 
   function handleComputerAttack() {
@@ -286,7 +304,7 @@ function createDOMController() {
     const [row, col] = attackCoords;
 
     // Check if hit or miss
-    const ship = game.player1.gameboard.getShipAt([row, col]);
+    const isHit = game.player1.gameboard.isCellHit([row, col]);
 
     // Update player board
     const playerBoard = document.getElementById('player-board');
@@ -294,32 +312,47 @@ function createDOMController() {
       `[data-row="${row}"][data-col="${col}"]`
     );
 
-    if (ship) {
+    if (isHit) {
       document.getElementById('game-status').textContent =
-        `Computer hit your ship at (${row}, ${col})!`;
+        `Computer hit your ship at (${row}, ${col})! Computer goes again.`;
       cell.classList.add('hit');
+
+      // Update boards
+      updateGameBoards();
+
+      // Check for game over
+      if (game.isGameOver()) {
+        endGame();
+        return;
+      }
+
+      // Computer gets another turn on hit
+      setTimeout(() => {
+        handleComputerAttack();
+      }, 1500);
     } else {
       document.getElementById('game-status').textContent =
         `Computer missed at (${row}, ${col})!`;
       cell.classList.add('miss');
+
+      // Update boards
+      updateGameBoards();
+
+      // Check for game over
+      if (game.isGameOver()) {
+        endGame();
+        return;
+      }
+
+      // Switch back to player's turn on miss
+      setTimeout(() => {
+        isPlayerTurn = true;
+        document.getElementById('current-player').textContent =
+          "Player 1's Turn";
+        document.getElementById('game-status').textContent =
+          'Your turn - attack enemy board!';
+      }, 1500);
     }
-
-    // Update boards
-    updateGameBoards();
-
-    // Check for game over
-    if (game.isGameOver()) {
-      endGame();
-      return;
-    }
-
-    // Switch back to player's turn
-    setTimeout(() => {
-      isPlayerTurn = true;
-      document.getElementById('current-player').textContent = "Player 1's Turn";
-      document.getElementById('game-status').textContent =
-        'Your turn - attack enemy board!';
-    }, 1500);
   }
 
   function endGame() {
