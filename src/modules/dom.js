@@ -120,4 +120,70 @@ function createDOMController() {
       }
     });
   }
+
+  function setupEventListeners() {
+    const board = document.getElementById('player-board-setup');
+
+    // Board hover and click
+    board.addEventListener('mouseover', e => {
+      if (e.target.classList.contains('cell')) {
+        const row = parseInt(e.target.dataset.row);
+        const col = parseInt(e.target.dataset.col);
+        const currentShip = ships[selectedShipIndex];
+
+        if (!currentShip.placed) {
+          showShipPreview(
+            row,
+            col,
+            currentShip.length,
+            currentOrientation,
+            true
+          );
+        }
+      }
+    });
+
+    board.addEventListener('mouseout', () => {
+      updateBoardDisplay();
+    });
+
+    board.addEventListener('click', e => {
+      if (e.target.classList.contains('cell')) {
+        const row = parseInt(e.target.dataset.row);
+        const col = parseInt(e.target.dataset.col);
+        placeShip(row, col);
+      }
+    });
+
+    // Orientation toggle
+    document
+      .getElementById('toggle-orientation')
+      .addEventListener('click', () => {
+        currentOrientation =
+          currentOrientation === 'horizontal' ? 'vertical' : 'horizontal';
+        document.getElementById('orientation-text').textContent =
+          currentOrientation.charAt(0).toUpperCase() +
+          currentOrientation.slice(1);
+      });
+
+    // Ship selection
+    const shipBtns = document.querySelectorAll('.ship-btn');
+    shipBtns.forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        if (!ships[index].placed) {
+          shipBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedShipIndex = index;
+        }
+      });
+    });
+
+    // Start game button
+    document.getElementById('start-game-btn').addEventListener('click', () => {
+      document.getElementById('setup-phase').classList.remove('active');
+      document.getElementById('setup-phase').classList.add('hidden');
+      document.getElementById('game-phase').classList.remove('hidden');
+      document.getElementById('game-phase').classList.add('active');
+    });
+  }
 }
