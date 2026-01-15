@@ -5,6 +5,7 @@ function createDOMController() {
   const game = createGame();
   let currentOrientation = 'horizontal';
   let selectedShipIndex = 0;
+  let isPlayerTurn = true;
   const ships = [
     { name: 'Carrier', length: 5, placed: false },
     { name: 'Battleship', length: 4, placed: false },
@@ -201,13 +202,9 @@ function createDOMController() {
 
       if (ship) {
         cell.classList.add('ship');
-        // Check if this cell was hit
-        if (ship.hits > 0) {
-          // This is a simplified check - we should track individual cell hits
-          // For now, we'll add a more sophisticated approach
-          cell.classList.add('hit');
-        }
-      } else if (isMiss) {
+      }
+
+      if (isMiss) {
         cell.classList.add('miss');
       }
     });
@@ -219,24 +216,24 @@ function createDOMController() {
     enemyCells.forEach(cell => {
       const row = parseInt(cell.dataset.row);
       const col = parseInt(cell.dataset.col);
-      const ship = game.player2.gameboard.getShipAt([row, col]);
       const missedAttacks = game.player2.gameboard.getMissedAttacks();
       const isMiss = missedAttacks.some(
         attack => attack[0] === row && attack[1] === col
       );
 
-      cell.classList.remove('hit', 'miss');
-
-      // Don't show enemy ships, only hits and misses
-      if (ship && ship.hits > 0) {
-        cell.classList.add('hit');
-      } else if (isMiss) {
+      // Don't show enemy ships, only hits and misses already marked
+      if (isMiss && !cell.classList.contains('miss')) {
         cell.classList.add('miss');
       }
     });
   }
 
   function handlePlayerAttack(row, col) {
+    // Check if it's player's turn
+    if (!isPlayerTurn) {
+      return;
+    }
+
     // Check if cell already attacked
     const enemyBoard = document.getElementById('enemy-board');
     const cell = enemyBoard.querySelector(
@@ -268,7 +265,61 @@ function createDOMController() {
     // Check for game over
     if (game.isGameOver()) {
       endGame();
+      return;
     }
+
+    // Switch to computer's turn
+    isPlayerTurn = false;
+    document.getElementById('current-player').textContent = "Computer's Turn";
+    document.getElementById('game-status').textContent =
+      'Computer is thinking...';
+
+    // Computer attacks after delay
+    setTimeout(() => {
+      handleComputerAttack();
+    }, 1000);
+  }
+
+  function handleComputerAttack() {
+    // Computer makes random attack
+    const attackCoords = game.player2.randomAttack(game.player1.gameboard);
+    const [row, col] = attackCoords;
+
+    // Check if hit or miss
+    const ship = game.player1.gameboard.getShipAt([row, col]);
+
+    // Update player board
+    const playerBoard = document.getElementById('player-board');
+    const cell = playerBoard.querySelector(
+      `[data-row="${row}"][data-col="${col}"]`
+    );
+
+    if (ship) {
+      document.getElementById('game-status').textContent =
+        `Computer hit your ship at (${row}, ${col})!`;
+      cell.classList.add('hit');
+    } else {
+      document.getElementById('game-status').textContent =
+        `Computer missed at (${row}, ${col})!`;
+      cell.classList.add('miss');
+    }
+
+    // Update boards
+    updateGameBoards();
+
+    // Check for game over
+    if (game.isGameOver()) {
+      endGame();
+      return;
+    }
+
+    // Switch back to player's turn
+    setTimeout(() => {
+      isPlayerTurn = true;
+      document.getElementById('current-player').textContent = "Player 1's Turn";
+      document.getElementById('game-status').textContent =
+        'Your turn - attack enemy board!';
+    }, 1500);
   }
 
   function endGame() {
@@ -372,6 +423,7 @@ function createDOMController() {
       document.getElementById('setup-phase').classList.add('hidden');
       document.getElementById('game-phase').classList.remove('hidden');
       document.getElementById('game-phase').classList.add('active');
+      document.getElementById('current-player').textContent = "Player 1's Turn";
       document.getElementById('game-status').textContent =
         'Your turn - attack enemy board!';
 
