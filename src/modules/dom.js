@@ -27,4 +27,13 @@ function createDOMController() {
       }
     }
   }
+
+  function canPlaceShip(row, col, length, orientation) {
+    if (orientation === 'horizontal') {
+      if (col + length > 10) return false;
+    } else {
+      if (row + length > 10) return false;
+    }
+    return true;
+  }
 }
