@@ -36,4 +36,33 @@ function createDOMController() {
     }
     return true;
   }
+
+  function showShipPreview(row, col, length, orientation, valid) {
+    const board = document.getElementById('player-board-setup');
+    const cells = board.querySelectorAll('.cell');
+
+    // Clear previous preview
+    cells.forEach(cell => {
+      cell.classList.remove('preview', 'preview-invalid');
+    });
+
+    if (!canPlaceShip(row, col, length, orientation)) {
+      valid = false;
+    }
+
+    // Show new preview
+    for (let i = 0; i < length; i++) {
+      const targetRow = orientation === 'horizontal' ? row : row + i;
+      const targetCol = orientation === 'horizontal' ? col + i : col;
+
+      if (targetRow < 10 && targetCol < 10) {
+        const cell = board.querySelector(
+          `[data-row="${targetRow}"][data-col="${targetCol}"]`
+        );
+        if (cell) {
+          cell.classList.add(valid ? 'preview' : 'preview-invalid');
+        }
+      }
+    }
+  }
 }
