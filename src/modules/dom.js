@@ -474,12 +474,7 @@ function createDOMController() {
       location.reload();
     });
 
-    // Restart button
-    document.getElementById('restart-btn').addEventListener('click', () => {
-      location.reload();
-    });
-
-    // Confirm turn button (add this)
+    // Confirm turn button
     document
       .getElementById('confirm-turn-btn')
       .addEventListener('click', () => {
@@ -491,6 +486,13 @@ function createDOMController() {
           'Target an enemy cell to attack!';
         document.getElementById('confirm-turn-btn').classList.add('hidden');
       });
+
+    // End game button (add this)
+    document.getElementById('end-game-btn').addEventListener('click', () => {
+      if (confirm('Are you sure you want to end the current game?')) {
+        location.reload();
+      }
+    });
   }
 
   function initialize() {
