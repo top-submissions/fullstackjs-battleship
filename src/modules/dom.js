@@ -250,7 +250,7 @@ function createDOMController() {
 
     if (cell.classList.contains('hit') || cell.classList.contains('miss')) {
       document.getElementById('game-status').textContent =
-        'Already attacked this cell!';
+        'You already attacked that cell! Choose another.';
       return;
     }
 
@@ -258,7 +258,8 @@ function createDOMController() {
     const result = game.player1.attack(game.player2.gameboard, [row, col]);
 
     if (result === 'hit') {
-      document.getElementById('game-status').textContent = 'Hit! Go again!';
+      document.getElementById('game-status').textContent =
+        'Direct hit! You damaged an enemy ship. Fire again!';
       cell.classList.add('hit');
 
       // Update boards
@@ -273,7 +274,8 @@ function createDOMController() {
       // Player gets another turn on hit
       // Stay on player's turn
     } else {
-      document.getElementById('game-status').textContent = 'Miss!';
+      document.getElementById('game-status').textContent =
+        'You missed! Enemy turn.';
       cell.classList.add('miss');
 
       // Update boards
@@ -289,7 +291,7 @@ function createDOMController() {
       isPlayerTurn = false;
       document.getElementById('current-player').textContent = "Computer's Turn";
       document.getElementById('game-status').textContent =
-        'Computer is thinking...';
+        'Computer is analyzing...';
 
       // Computer attacks after delay
       setTimeout(() => {
@@ -314,7 +316,7 @@ function createDOMController() {
 
     if (isHit) {
       document.getElementById('game-status').textContent =
-        `Computer hit your ship at (${row}, ${col})! Computer goes again.`;
+        'The enemy hit one of your ships! They attack again.';
       cell.classList.add('hit');
 
       // Update boards
@@ -332,7 +334,7 @@ function createDOMController() {
       }, 1500);
     } else {
       document.getElementById('game-status').textContent =
-        `Computer missed at (${row}, ${col})!`;
+        'The enemy missed! Your turn.';
       cell.classList.add('miss');
 
       // Update boards
@@ -350,7 +352,7 @@ function createDOMController() {
         document.getElementById('current-player').textContent =
           "Player 1's Turn";
         document.getElementById('game-status').textContent =
-          'Your turn - attack enemy board!';
+          'Target an enemy cell to attack!';
       }, 1500);
     }
   }
