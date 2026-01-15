@@ -1,7 +1,7 @@
 {
-  "name": "template-webpack",
+  "name": "fullstackjs-battleship",
   "version": "1.0.0",
-  "description": "A production-ready Webpack 5 template with ESLint and Prettier",
+  "description": "A TDD-based Battleship game built with Vanilla JS and Webpack 5 as part of The Odin Project",
   "main": "src/index.js",
   "directories": {
     "doc": "docs"
@@ -21,22 +21,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/top-submissions/template-webpack.git"
+    "url": "git+https://github.com/top-submissions/fullstackjs-battleship.git"
   },
   "keywords": [
     "webpack",
-    "template",
-    "boilerplate",
-    "webpack5",
-    "eslint",
-    "prettier"
+    "battleship",
+    "tdd",
+    "jest",
+    "odin-project",
+    "javascript",
+    "vanilla-js"
   ],
   "author": "top-submissions",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/top-submissions/template-webpack/issues"
+    "url": "https://github.com/top-submissions/fullstackjs-battleship/issues"
   },
-  "homepage": "https://github.com/top-submissions/template-webpack#readme",
+  "homepage": "https://github.com/top-submissions/fullstackjs-battleship#readme",
   "devDependencies": {
     "@babel/core": "^7.28.5",
     "@babel/preset-env": "^7.28.5",
