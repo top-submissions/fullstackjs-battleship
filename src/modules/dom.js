@@ -29,11 +29,27 @@ function createDOMController() {
   }
 
   function canPlaceShip(row, col, length, orientation) {
+    // Check bounds
     if (orientation === 'horizontal') {
       if (col + length > 10) return false;
     } else {
       if (row + length > 10) return false;
     }
+
+    // Check for collisions with existing ships
+    for (let i = 0; i < length; i++) {
+      const targetRow = orientation === 'horizontal' ? row : row + i;
+      const targetCol = orientation === 'horizontal' ? col + i : col;
+
+      const existingShip = game.player1.gameboard.getShipAt([
+        targetRow,
+        targetCol,
+      ]);
+      if (existingShip) {
+        return false; // Collision detected
+      }
+    }
+
     return true;
   }
 
