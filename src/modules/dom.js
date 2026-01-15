@@ -1,8 +1,10 @@
 import { createGame } from './game.js';
 import { createShip } from './ship.js';
+import { createSoundController } from './sounds.js';
 
 function createDOMController() {
   const game = createGame();
+  const sounds = createSoundController();
   let currentOrientation = 'horizontal';
   let selectedShipIndex = 0;
   let isPlayerTurn = true;
@@ -141,6 +143,9 @@ function createDOMController() {
     const ship = createShip(currentShip.length);
     game.player1.gameboard.placeShip(ship, [row, col], currentOrientation);
 
+    // Play placement sound
+    sounds.playPlaceShip();
+
     // Mark ship as placed
     ships[selectedShipIndex].placed = true;
 
@@ -266,6 +271,7 @@ function createDOMController() {
     const result = game.player1.attack(game.player2.gameboard, [row, col]);
 
     if (result === 'hit') {
+      sounds.playHit(); // Add this line
       document.getElementById('game-status').textContent =
         'Direct hit! You damaged an enemy ship. Fire again!';
       cell.classList.add('hit');
@@ -282,6 +288,7 @@ function createDOMController() {
       // Player gets another turn on hit
       // Stay on player's turn
     } else {
+      sounds.playMiss();
       document.getElementById('game-status').textContent =
         'You missed! Enemy turn.';
       cell.classList.add('miss');
@@ -323,6 +330,7 @@ function createDOMController() {
     );
 
     if (isHit) {
+      sounds.playHit();
       document.getElementById('game-status').textContent =
         'The enemy hit one of your ships! They attack again.';
       cell.classList.add('hit');
@@ -341,6 +349,7 @@ function createDOMController() {
         handleComputerAttack();
       }, 1500);
     } else {
+      sounds.playMiss();
       document.getElementById('game-status').textContent =
         'The enemy missed! Click "Ready for Your Turn" to continue.';
       cell.classList.add('miss');
@@ -361,6 +370,7 @@ function createDOMController() {
   }
 
   function endGame() {
+    sounds.playGameOver();
     const winner = game.getWinner();
     document.getElementById('game-phase').classList.remove('active');
     document.getElementById('game-phase').classList.add('hidden');
@@ -491,6 +501,19 @@ function createDOMController() {
     document.getElementById('end-game-btn').addEventListener('click', () => {
       if (confirm('Are you sure you want to end the current game?')) {
         location.reload();
+      }
+    });
+
+    // Mute button (add this)
+    document.getElementById('mute-btn').addEventListener('click', () => {
+      const muted = sounds.toggleMute();
+      const muteBtn = document.getElementById('mute-btn');
+      if (muted) {
+        muteBtn.textContent = '🔇 Sound Off';
+        muteBtn.classList.add('muted');
+      } else {
+        muteBtn.textContent = '🔊 Sound On';
+        muteBtn.classList.remove('muted');
       }
     });
   }

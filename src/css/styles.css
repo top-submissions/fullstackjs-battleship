@@ -27,6 +27,29 @@ h1 {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+.mute-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: transparent;
+  border: 2px solid #0f3460;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.mute-btn:hover {
+  background-color: #0f3460;
+  border-color: #4ecca3;
+}
+
+.mute-btn.muted {
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
 #game-info {
   margin-top: 20px;
 }
