@@ -122,6 +122,10 @@ button:disabled {
   opacity: 0.6;
 }
 
+button.hidden {
+  display: none;
+}
+
 #toggle-orientation {
   background-color: #4ecca3;
   color: #1a1a2e;
@@ -129,6 +133,23 @@ button:disabled {
 }
 
 #toggle-orientation:hover {
+  background-color: #3dbb8f;
+}
+
+.game-controls {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#confirm-turn-btn {
+  background-color: #4ecca3;
+  color: #1a1a2e;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 15px 30px;
+}
+
+#confirm-turn-btn:hover {
   background-color: #3dbb8f;
 }
 

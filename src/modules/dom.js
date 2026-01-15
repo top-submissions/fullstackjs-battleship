@@ -6,6 +6,7 @@ function createDOMController() {
   let currentOrientation = 'horizontal';
   let selectedShipIndex = 0;
   let isPlayerTurn = true;
+  let waitingForConfirmation = false;
   const ships = [
     { name: 'Carrier', length: 5, placed: false },
     { name: 'Battleship', length: 4, placed: false },
@@ -237,6 +238,13 @@ function createDOMController() {
   }
 
   function handlePlayerAttack(row, col) {
+    // Check if waiting for confirmation
+    if (waitingForConfirmation) {
+      document.getElementById('game-status').textContent =
+        'Click "Ready for Your Turn" button first!';
+      return;
+    }
+
     // Check if it's player's turn
     if (!isPlayerTurn) {
       return;
@@ -334,7 +342,7 @@ function createDOMController() {
       }, 1500);
     } else {
       document.getElementById('game-status').textContent =
-        'The enemy missed! Your turn.';
+        'The enemy missed! Click "Ready for Your Turn" to continue.';
       cell.classList.add('miss');
 
       // Update boards
@@ -346,14 +354,9 @@ function createDOMController() {
         return;
       }
 
-      // Switch back to player's turn on miss
-      setTimeout(() => {
-        isPlayerTurn = true;
-        document.getElementById('current-player').textContent =
-          "Player 1's Turn";
-        document.getElementById('game-status').textContent =
-          'Target an enemy cell to attack!';
-      }, 1500);
+      // Show confirm button instead of auto-switching
+      waitingForConfirmation = true;
+      document.getElementById('confirm-turn-btn').classList.remove('hidden');
     }
   }
 
@@ -470,6 +473,24 @@ function createDOMController() {
     document.getElementById('restart-btn').addEventListener('click', () => {
       location.reload();
     });
+
+    // Restart button
+    document.getElementById('restart-btn').addEventListener('click', () => {
+      location.reload();
+    });
+
+    // Confirm turn button (add this)
+    document
+      .getElementById('confirm-turn-btn')
+      .addEventListener('click', () => {
+        waitingForConfirmation = false;
+        isPlayerTurn = true;
+        document.getElementById('current-player').textContent =
+          "Player 1's Turn";
+        document.getElementById('game-status').textContent =
+          'Target an enemy cell to attack!';
+        document.getElementById('confirm-turn-btn').classList.add('hidden');
+      });
   }
 
   function initialize() {
