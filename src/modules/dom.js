@@ -183,6 +183,116 @@ function createDOMController() {
     });
   }
 
+  function updateGameBoards() {
+    // Update player board
+    const playerBoard = document.getElementById('player-board');
+    const playerCells = playerBoard.querySelectorAll('.cell');
+
+    playerCells.forEach(cell => {
+      const row = parseInt(cell.dataset.row);
+      const col = parseInt(cell.dataset.col);
+      const ship = game.player1.gameboard.getShipAt([row, col]);
+      const missedAttacks = game.player1.gameboard.getMissedAttacks();
+      const isMiss = missedAttacks.some(
+        attack => attack[0] === row && attack[1] === col
+      );
+
+      cell.classList.remove('ship', 'hit', 'miss');
+
+      if (ship) {
+        cell.classList.add('ship');
+        // Check if this cell was hit
+        if (ship.hits > 0) {
+          // This is a simplified check - we should track individual cell hits
+          // For now, we'll add a more sophisticated approach
+          cell.classList.add('hit');
+        }
+      } else if (isMiss) {
+        cell.classList.add('miss');
+      }
+    });
+
+    // Update enemy board
+    const enemyBoard = document.getElementById('enemy-board');
+    const enemyCells = enemyBoard.querySelectorAll('.cell');
+
+    enemyCells.forEach(cell => {
+      const row = parseInt(cell.dataset.row);
+      const col = parseInt(cell.dataset.col);
+      const ship = game.player2.gameboard.getShipAt([row, col]);
+      const missedAttacks = game.player2.gameboard.getMissedAttacks();
+      const isMiss = missedAttacks.some(
+        attack => attack[0] === row && attack[1] === col
+      );
+
+      cell.classList.remove('hit', 'miss');
+
+      // Don't show enemy ships, only hits and misses
+      if (ship && ship.hits > 0) {
+        cell.classList.add('hit');
+      } else if (isMiss) {
+        cell.classList.add('miss');
+      }
+    });
+  }
+
+  function handlePlayerAttack(row, col) {
+    // Check if cell already attacked
+    const enemyBoard = document.getElementById('enemy-board');
+    const cell = enemyBoard.querySelector(
+      `[data-row="${row}"][data-col="${col}"]`
+    );
+
+    if (cell.classList.contains('hit') || cell.classList.contains('miss')) {
+      document.getElementById('game-status').textContent =
+        'Already attacked this cell!';
+      return;
+    }
+
+    // Perform attack
+    game.player1.attack(game.player2.gameboard, [row, col]);
+
+    // Check if hit or miss
+    const ship = game.player2.gameboard.getShipAt([row, col]);
+    if (ship) {
+      document.getElementById('game-status').textContent = 'Hit!';
+      cell.classList.add('hit');
+    } else {
+      document.getElementById('game-status').textContent = 'Miss!';
+      cell.classList.add('miss');
+    }
+
+    // Update boards
+    updateGameBoards();
+
+    // Check for game over
+    if (game.isGameOver()) {
+      endGame();
+    }
+  }
+
+  function endGame() {
+    const winner = game.getWinner();
+    document.getElementById('game-phase').classList.remove('active');
+    document.getElementById('game-phase').classList.add('hidden');
+    document.getElementById('game-over-phase').classList.remove('hidden');
+    document.getElementById('game-over-phase').classList.add('active');
+    document.getElementById('winner-message').textContent =
+      `${winner.name} wins!`;
+  }
+
+  function setupGamePhaseListeners() {
+    const enemyBoard = document.getElementById('enemy-board');
+
+    enemyBoard.addEventListener('click', e => {
+      if (e.target.classList.contains('cell')) {
+        const row = parseInt(e.target.dataset.row);
+        const col = parseInt(e.target.dataset.col);
+        handlePlayerAttack(row, col);
+      }
+    });
+  }
+
   function setupEventListeners() {
     const board = document.getElementById('player-board-setup');
 
