@@ -19,9 +19,11 @@
 
 ## ✨ Features
 
+- **Drag and Drop Ship Placement:** Intuitively position your fleet before the battle begins.
+- **Immersive Audio:** Integrated sound effects for hits, misses, and game events to enhance gameplay.
+- **Ready System:** A dedicated "Ready" state to confirm fleet positioning before starting the game loop.
+- **Game Control:** Added an "End Game" feature to reset the board or exit a session immediately.
 - **Test-Driven Development:** Core game logic (Ships, Gameboards, Players) developed using Jest unit tests.
-- **Smart Computer AI:** An opponent that can make random moves or target specific areas after a successful hit.
-- **Interactive UI:** Responsive 10x10 grids with real-time feedback for hits, misses, and sunk ships.
 - **Modern Build Pipeline:** Optimized asset bundling and development server using Webpack.
 
 ## 🚀 Getting Started
@@ -72,9 +74,9 @@ Open the `dist/index.html` file in your browser or use a local live server.
 
 If I were to continue working on this project, here's what I'd add:
 
-- [ ] **Drag and Drop:** Allow users to manually place their ships on the grid.
+- [x] **Drag and Drop:** Allow users to manually place their ships on the grid.
 - [ ] **Two-Player Mode:** Implement a pass-and-play feature for two human players.
-- [ ] **Sound Effects:** Add audio feedback for explosions, water splashes, and game victory.
+- [x] **Sound Effects:** Add audio feedback for explosions, water splashes, and game victory.
 - [ ] **Advanced AI:** Implement a "hunt-and-target" algorithm for a more challenging experience.
 
 ## 📚 What I Learned
