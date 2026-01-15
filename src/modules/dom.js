@@ -1,5 +1,5 @@
-import { container } from 'webpack';
 import { createGame } from './game.js';
+import { createShip } from './ship.js';
 
 function createDOMController() {
   const game = createGame();
@@ -64,5 +64,60 @@ function createDOMController() {
         }
       }
     }
+  }
+
+  function placeShip(row, col) {
+    const currentShip = ships[selectedShipIndex];
+    if (currentShip.placed) return;
+
+    if (!canPlaceShip(row, col, currentShip.length, currentOrientation)) {
+      return;
+    }
+
+    const ship = createShip(currentShip.length);
+    game.player1.gameboard.placeShip(ship, [row, col], currentOrientation);
+
+    // Mark ship as placed
+    ships[selectedShipIndex].placed = true;
+
+    // Update ship button
+    const shipBtns = document.querySelectorAll('.ship-btn');
+    shipBtns[selectedShipIndex].classList.remove('active');
+    shipBtns[selectedShipIndex].classList.add('placed');
+
+    // Select next unplaced ship
+    for (let i = 0; i < ships.length; i++) {
+      if (!ships[i].placed) {
+        selectedShipIndex = i;
+        shipBtns[i].classList.add('active');
+        break;
+      }
+    }
+
+    // Update board display
+    updateBoardDisplay();
+
+    // Check if all ships are placed
+    if (ships.every(s => s.placed)) {
+      document.getElementById('start-game-btn').disabled = false;
+      document.getElementById('game-status').textContent =
+        'All ships placed! Click Start Game to begin.';
+    }
+  }
+
+  function updateBoardDisplay() {
+    const board = document.getElementById('player-board-setup');
+    const cells = board.querySelectorAll('.cell');
+
+    cells.forEach(cell => {
+      const row = parseInt(cell.dataset.row);
+      const col = parseInt(cell.dataset.col);
+      const ship = game.player1.gameboard.getShipAt([row, col]);
+
+      cell.classList.remove('ship', 'preview', 'preview-invalid');
+      if (ship) {
+        cell.classList.add('ship');
+      }
+    });
   }
 }
