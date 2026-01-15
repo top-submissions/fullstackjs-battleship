@@ -28,6 +28,52 @@ function createDOMController() {
     }
   }
 
+  function placeComputerShips() {
+    const computerShips = [5, 4, 3, 3, 2]; // Ship lengths
+
+    computerShips.forEach(length => {
+      let placed = false;
+
+      while (!placed) {
+        const orientation = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+        const row = Math.floor(Math.random() * 10);
+        const col = Math.floor(Math.random() * 10);
+
+        // Check if ship can be placed
+        if (canPlaceComputerShip(row, col, length, orientation)) {
+          const ship = createShip(length);
+          game.player2.gameboard.placeShip(ship, [row, col], orientation);
+          placed = true;
+        }
+      }
+    });
+  }
+
+  function canPlaceComputerShip(row, col, length, orientation) {
+    // Check bounds
+    if (orientation === 'horizontal') {
+      if (col + length > 10) return false;
+    } else {
+      if (row + length > 10) return false;
+    }
+
+    // Check for collisions
+    for (let i = 0; i < length; i++) {
+      const targetRow = orientation === 'horizontal' ? row : row + i;
+      const targetCol = orientation === 'horizontal' ? col + i : col;
+
+      const existingShip = game.player2.gameboard.getShipAt([
+        targetRow,
+        targetCol,
+      ]);
+      if (existingShip) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   function canPlaceShip(row, col, length, orientation) {
     // Check bounds
     if (orientation === 'horizontal') {
@@ -196,10 +242,31 @@ function createDOMController() {
 
     // Start game button
     document.getElementById('start-game-btn').addEventListener('click', () => {
+      // Place computer ships
+      placeComputerShips();
+
+      // Update player board to show ships
+      const playerBoard = document.getElementById('player-board');
+      const playerCells = playerBoard.querySelectorAll('.cell');
+      playerCells.forEach(cell => {
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
+        const ship = game.player1.gameboard.getShipAt([row, col]);
+        if (ship) {
+          cell.classList.add('ship');
+        }
+      });
+
+      // Switch to game phase
       document.getElementById('setup-phase').classList.remove('active');
       document.getElementById('setup-phase').classList.add('hidden');
       document.getElementById('game-phase').classList.remove('hidden');
       document.getElementById('game-phase').classList.add('active');
+      document.getElementById('game-status').textContent =
+        'Your turn - attack enemy board!';
+
+      // Setup game phase listeners
+      setupGamePhaseListeners();
     });
   }
 
