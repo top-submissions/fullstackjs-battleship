@@ -463,6 +463,11 @@ function createDOMController() {
       // Setup game phase listeners
       setupGamePhaseListeners();
     });
+
+    // Restart button
+    document.getElementById('restart-btn').addEventListener('click', () => {
+      location.reload();
+    });
   }
 
   function initialize() {
