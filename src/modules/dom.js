@@ -186,4 +186,24 @@ function createDOMController() {
       document.getElementById('game-phase').classList.add('active');
     });
   }
+
+  function initialize() {
+    const playerBoardSetup = document.getElementById('player-board-setup');
+    const playerBoard = document.getElementById('player-board');
+    const enemyBoard = document.getElementById('enemy-board');
+
+    renderGameboard(game.player1.gameboard, playerBoardSetup, false);
+    renderGameboard(game.player1.gameboard, playerBoard, false);
+    renderGameboard(game.player2.gameboard, enemyBoard, true);
+
+    setupEventListeners();
+
+    console.log('Game initialized');
+  }
+
+  return {
+    initialize,
+  };
 }
+
+export { createDOMController };
